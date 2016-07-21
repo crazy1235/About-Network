@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">BasicNetwork</string>
+
+    <string name="btn_query">查询</string>
+
+    <string name="btn_download">下载图片</string>
+
+    <string name="img_content_desc">图片描述</string>
 </resources>
