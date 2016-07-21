@@ -14,7 +14,7 @@ public class Constants {
     /**
      *
      */
-    public static final String URL_QUERY_PHONE = "http://apis.baidu.com/apistore/mobilenumber/mobilenumber/?phone=";
+    public static final String URL_QUERY_PHONE = "http://apis.baidu.com/apistore/mobilenumber/mobilenumber/?";
 
 
     /**

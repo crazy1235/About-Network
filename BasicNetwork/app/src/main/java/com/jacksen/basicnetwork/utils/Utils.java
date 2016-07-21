@@ -1,10 +1,21 @@
 package com.jacksen.basicnetwork.utils;
 
+import android.text.TextUtils;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Admin on 2016/7/21.
@@ -65,5 +76,38 @@ public class Utils {
             sb.append(line + "\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * @param outputStream
+     * @param paramsList
+     */
+    public static void writeParams(OutputStream outputStream, HashMap<String, String> paramsList) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Set<String> keys = paramsList.keySet();
+        Iterator<String> iterable = keys.iterator();
+        while (iterable.hasNext()) {
+            if (!TextUtils.isEmpty(stringBuilder)) {
+                stringBuilder.append("&");
+            }
+            try {
+                String key = iterable.next();
+                stringBuilder.append(URLEncoder.encode(key, "UTF-8"));
+                stringBuilder.append(URLEncoder.encode(paramsList.get(key), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(stringBuilder.toString());
+            writer.flush();
+            writer.close();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

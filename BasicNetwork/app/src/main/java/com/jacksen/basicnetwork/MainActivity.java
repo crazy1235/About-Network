@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,23 +82,32 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                InputStream inputStream = null;
                 try {
-                    URL url = new URL(Constants.URL_QUERY_PHONE + phone);
+//                    URL url = new URL(Constants.URL_QUERY_PHONE + phone);
+                    URL url = new URL(Constants.URL_QUERY_PHONE);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     // 设置连接超时时间
                     connection.setConnectTimeout(10000);
                     // 设置读取超时时间
                     connection.setReadTimeout(5000);
                     // 设置请求方式，默认是GET
-                    connection.setRequestMethod("GET");
+                    connection.setRequestMethod("POST");
                     // 接受输入流
                     connection.setDoInput(true);
                     // 添加header
                     connection.setRequestProperty("apikey", Constants.API_KEY);
+
+                    //
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("phone", phone);
+                    Utils.writeParams(connection.getOutputStream(), params);
+
+
                     // 发起请求
                     connection.connect();
 
-                    InputStream inputStream = connection.getInputStream();
+                    inputStream = connection.getInputStream();
                     String result = Utils.convertStreamToString(inputStream);
 
                     Message msg = Message.obtain(myHandler, WHAT_QUERY_PHONE, result);
@@ -108,7 +118,16 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    if (inputStream != null) {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
+
             }
         }).start();
     }
