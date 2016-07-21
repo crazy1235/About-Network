@@ -1,6 +1,10 @@
 package com.jacksen.basicnetwork.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by Admin on 2016/7/21.
@@ -45,5 +49,21 @@ public class Utils {
      */
     public static boolean checkFileIsExist(String filePath) {
         return checkFileIsExist(new File(filePath));
+    }
+
+
+    /**
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public static String convertStreamToString(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        return sb.toString();
     }
 }
