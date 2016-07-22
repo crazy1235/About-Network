@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">VolleyDemo</string>
+
+    <string name="btn_open_second">OpenSecond</string>
+
+
 </resources>

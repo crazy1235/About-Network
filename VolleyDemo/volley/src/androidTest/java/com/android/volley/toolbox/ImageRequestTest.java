@@ -24,7 +24,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.tests.R;
+import com.android.volley.testsd.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

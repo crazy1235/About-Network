@@ -1,8 +1,11 @@
 package com.jacksen.volleydemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,6 +23,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
+    private Button openSecondBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         testStringRequest();
+
+        openSecondBtn = (Button) findViewById(R.id.open_second_btn);
+        openSecondBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SecondActivity.class));
+            }
+        });
     }
 
 
