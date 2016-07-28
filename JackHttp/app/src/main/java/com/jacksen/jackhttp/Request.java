@@ -14,6 +14,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     // 默认编码方式
     private static final String DEFAULT_PARAMS_ENCODING = "URF-8";
 
+    // default content-type
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+
     // 请求序列号
     protected int serialNum = 0;
 
@@ -106,6 +109,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
     }
 
     /**

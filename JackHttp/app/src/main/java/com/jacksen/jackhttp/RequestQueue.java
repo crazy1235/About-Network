@@ -31,9 +31,13 @@ public class RequestQueue {
     // HTTP请求的执行者
     private HttpStack httpStack;
 
+    /**
+     * @param coreNum
+     * @param httpStack
+     */
     protected RequestQueue(int coreNum, HttpStack httpStack) {
         this.dispatchNum = coreNum;
-        this.httpStack = httpStack;
+        this.httpStack = httpStack != null ? httpStack : HttpStackFactory.createHttpStack();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.jacksen.jackhttp;
 
 /**
+ * 执行网路请求的接口
  * Created by Admin on 2016/7/28.
  */
 
