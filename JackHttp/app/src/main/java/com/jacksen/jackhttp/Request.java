@@ -35,8 +35,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     //
     HttpMethod httpMethod = HttpMethod.GET;
 
+
     // 请求的header
     private Map<String, String> headers = new HashMap<>();
+
 
     // 请求的参数
     private Map<String, String> bodyParams = new HashMap<>();
@@ -50,6 +52,60 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         this.httpMethod = method;
         this.url = url;
         this.requestListener = listener;
+    }
+
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+
+    public Map<String, String> getBodyParams() {
+        return bodyParams;
+    }
+
+    public void setSerialNum(int serialNum) {
+        this.serialNum = serialNum;
+    }
+
+    private int getSerialNum() {
+        return this.serialNum;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    private Priority getPriority() {
+        return priority;
+    }
+
+    public boolean isShouldCache() {
+        return shouldCache;
+    }
+
+    public void setShouldCache(boolean shouldCache) {
+        this.shouldCache = shouldCache;
+    }
+
+    public boolean isCancel() {
+        return isCancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        isCancel = cancel;
+    }
+
+    public boolean isHttps() {
+        return url.startsWith("https");
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /**
@@ -67,14 +123,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
             String msg = response != null ? response.getMessage() : "unkown error";
             requestListener.onComplete(code, result, msg);
         }
-    }
-
-    private int getSerialNum() {
-        return this.serialNum;
-    }
-
-    private Priority getPriority() {
-        return Priority.IMMEDIATE;
     }
 
     /**
@@ -132,6 +180,20 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return bodyParams;
     }
 
+    /**
+     * @param name
+     * @param value
+     */
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
+
+    /**
+     * 对请求进行排序处理，根据优先级和加入到队列的序号进行排序
+     *
+     * @param tRequest
+     * @return
+     */
     @Override
     public int compareTo(Request<T> tRequest) {
         Priority priority = this.getPriority();
@@ -141,6 +203,51 @@ public abstract class Request<T> implements Comparable<Request<T>> {
                 : priority.ordinal() - anotherPriority.ordinal();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = -1;
+        result = prime * result + ((headers == null) ? 0 : headers.hashCode());
+        result = prime * result + ((httpMethod == null) ? 0 : httpMethod.hashCode());
+        result = prime * result + ((bodyParams == null) ? 0 : bodyParams.hashCode());
+        result = prime * result + ((priority == null) ? 0 : priority.hashCode());
+        result = prime * result + (shouldCache ? 1231 : 1237);
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Request<?> other = (Request<?>) obj;
+        if (headers == null) {
+            if (other.headers != null)
+                return false;
+        } else if (!headers.equals(other.headers))
+            return false;
+        if (httpMethod != other.httpMethod)
+            return false;
+        if (bodyParams == null) {
+            if (other.bodyParams != null)
+                return false;
+        } else if (!bodyParams.equals(other.bodyParams))
+            return false;
+        if (priority != other.priority)
+            return false;
+        if (shouldCache != other.shouldCache)
+            return false;
+        if (url == null) {
+            if (other.url != null)
+                return false;
+        } else if (!url.equals(other.url))
+            return false;
+        return true;
+    }
 
     /**
      * 网络请求方式
