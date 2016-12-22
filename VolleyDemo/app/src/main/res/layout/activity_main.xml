@@ -10,16 +10,43 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jacksen.volleydemo.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
 
     <Button
         android:id="@+id/open_second_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_open_second" />
+
+
+    <Button
+        android:id="@+id/string_request_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_request" />
+
+    <Button
+        android:id="@+id/json_request_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/json_request" />
+
+
+    <Button
+        android:id="@+id/image_request_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_request" />
+
+    <Button
+        android:id="@+id/image_loader_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_loader" />
+
+    <Button
+        android:id="@+id/network_iv_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/network_image_view" />
 
 </LinearLayout>

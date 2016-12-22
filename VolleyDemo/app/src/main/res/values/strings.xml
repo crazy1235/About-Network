@@ -3,5 +3,14 @@
 
     <string name="btn_open_second">OpenSecond</string>
 
+    <string name="string_request">StringRequest</string>
+
+    <string name="json_request">JsonRequest</string>
+
+    <string name="image_request">ImageRequest</string>
+
+    <string name="image_loader">ImageLoader</string>
+
+    <string name="network_image_view">NetworkImageView</string>
 
 </resources>
