@@ -31,22 +31,10 @@
         android:text="@string/json_request" />
 
 
-    <Button
-        android:id="@+id/image_request_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/image_request" />
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/image_loader_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/image_loader" />
-
-    <Button
-        android:id="@+id/network_iv_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/network_image_view" />
 
 </LinearLayout>

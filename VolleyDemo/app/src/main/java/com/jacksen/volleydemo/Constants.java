@@ -5,6 +5,12 @@ package com.jacksen.volleydemo;
  */
 
 public class Constants {
+
+    /**
+     *
+     */
+    public static final String URL_GANK = "http://gank.io/api/data/Android/2/1";
+
     /**
      * image url
      */
