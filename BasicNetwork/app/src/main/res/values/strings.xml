@@ -6,4 +6,8 @@
     <string name="btn_download">下载图片</string>
 
     <string name="img_content_desc">图片描述</string>
+
+    <string name="http_url_connection">HttpURLConnection</string>
+
+    <string name="http_client">HttpClient</string>
 </resources>
