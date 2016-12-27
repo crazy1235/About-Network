@@ -106,4 +106,12 @@ public class PhoneInfo {
             this.suit = suit;
         }
     }
+
+    @Override
+    public String toString() {
+        return "phone: " + getRetData().getPhone() + "\n" +
+                "supplier: " + getRetData().getSupplier() + "\n" +
+                "province & city: " + getRetData().getProvince() + " " + getRetData().getCity() + "\n" +
+                "suit: " + getRetData().getSuit();
+    }
 }

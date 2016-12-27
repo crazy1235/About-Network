@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "com.jacksen.basicnetwork"
         minSdkVersion 10
@@ -27,5 +27,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
     compile 'com.alibaba:fastjson:1.2.14'
-    compile files('libs/org.apache.http.legacy.jar')
 }

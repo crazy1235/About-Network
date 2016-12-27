@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -27,7 +28,6 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 public class FirstActivity extends AppCompatActivity {
 
@@ -35,6 +35,7 @@ public class FirstActivity extends AppCompatActivity {
     private Button queryBtn;
     private Button downloadBtn;
     private ImageView imageView;
+    private TextView phoneContentTv;
 
     private static final int WHAT_DOWNLOAD_IMG = 1;
 
@@ -47,7 +48,7 @@ public class FirstActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_first);
 
         inputPhoneEt = (EditText) findViewById(R.id.input_phone_et);
 
@@ -70,6 +71,8 @@ public class FirstActivity extends AppCompatActivity {
             }
         });
 
+        phoneContentTv = (TextView) findViewById(R.id.phone_content_tv);
+
         myHandler = new MyHandler(this);
 
     }
@@ -85,24 +88,23 @@ public class FirstActivity extends AppCompatActivity {
                 InputStream inputStream = null;
                 try {
 //                    URL url = new URL(Constants.URL_QUERY_PHONE + phone);
-                    URL url = new URL(Constants.URL_QUERY_PHONE);
+                    URL url = new URL(Constants.URL_QUERY_PHONE + "phone=" + phone);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     // 设置连接超时时间
                     connection.setConnectTimeout(10000);
                     // 设置读取超时时间
                     connection.setReadTimeout(5000);
                     // 设置请求方式，默认是GET
-                    connection.setRequestMethod("POST");
+                    connection.setRequestMethod("GET");
                     // 接受输入流
                     connection.setDoInput(true);
                     // 添加header
                     connection.setRequestProperty("apikey", Constants.API_KEY);
 
                     //
-                    HashMap<String, String> params = new HashMap<>();
+                    /*HashMap<String, String> params = new HashMap<>();
                     params.put("phone", phone);
-                    Utils.writeParams(connection.getOutputStream(), params);
-
+                    Utils.writeParams(connection.getOutputStream(), params);*/
 
                     // 发起请求
                     connection.connect();
@@ -112,10 +114,6 @@ public class FirstActivity extends AppCompatActivity {
 
                     Message msg = Message.obtain(myHandler, WHAT_QUERY_PHONE, result);
                     myHandler.sendMessage(msg);
-
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -145,7 +143,7 @@ public class FirstActivity extends AppCompatActivity {
             Toast.makeText(this, "获取信息失败", Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(this, phoneInfo.getRetData().getCity(), Toast.LENGTH_SHORT).show();
+        phoneContentTv.setText(phoneInfo.toString());
     }
 
 
