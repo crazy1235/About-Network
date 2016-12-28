@@ -29,14 +29,16 @@ import java.io.File;
 
 public class Volley {
 
-    /** Default on-disk cache directory. */
+    /**
+     * Default on-disk cache directory.
+     */
     private static final String DEFAULT_CACHE_DIR = "volley";
 
     /**
      * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
      *
      * @param context A {@link Context} to use for creating the cache dir.
-     * @param stack An {@link HttpStack} to use for the network, or null for default.
+     * @param stack   An {@link HttpStack} to use for the network, or null for default.
      * @return A started {@link RequestQueue} instance.
      */
     public static RequestQueue newRequestQueue(Context context, HttpStack stack) {
@@ -50,19 +52,27 @@ public class Volley {
         } catch (NameNotFoundException e) {
         }
 
+        // 1. 创建HttpStack对象
         if (stack == null) {
             if (Build.VERSION.SDK_INT >= 9) {
+
+                // 1. Android 2.3版本及以上
                 stack = new HurlStack();
             } else {
-                // Prior to Gingerbread, HttpUrlConnection was unreliable.
+
+                // 2. Android 2.3版本之前，HttpUrlConection 不可用
                 // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
                 stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
             }
         }
 
+        // 2. 创建Network对象 (发起网路请求)
         Network network = new BasicNetwork(stack);
 
+        // 3. 创建请求队列
         RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
+
+        // 4. 队列启动
         queue.start();
 
         return queue;

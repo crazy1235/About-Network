@@ -22,7 +22,7 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  * Provides a thread for performing cache triage on a queue of requests.
- *
+ * <p>
  * Requests added to the specified cache queue are resolved from cache.
  * Any deliverable response is posted back to the caller via a
  * {@link ResponseDelivery}.  Cache misses and responses that require
@@ -33,29 +33,39 @@ public class CacheDispatcher extends Thread {
 
     private static final boolean DEBUG = VolleyLog.DEBUG;
 
-    /** The queue of requests coming in for triage. */
+    /**
+     * The queue of requests coming in for triage.
+     */
     private final BlockingQueue<Request<?>> mCacheQueue;
 
-    /** The queue of requests going out to the network. */
+    /**
+     * The queue of requests going out to the network.
+     */
     private final BlockingQueue<Request<?>> mNetworkQueue;
 
-    /** The cache to read from. */
+    /**
+     * The cache to read from.
+     */
     private final Cache mCache;
 
-    /** For posting responses. */
+    /**
+     * For posting responses.
+     */
     private final ResponseDelivery mDelivery;
 
-    /** Used for telling us to die. */
+    /**
+     * Used for telling us to die.
+     */
     private volatile boolean mQuit = false;
 
     /**
      * Creates a new cache triage dispatcher thread.  You must call {@link #start()}
      * in order to begin processing.
      *
-     * @param cacheQueue Queue of incoming requests for triage
+     * @param cacheQueue   Queue of incoming requests for triage
      * @param networkQueue Queue to post requests that require network to
-     * @param cache Cache interface to use for resolution
-     * @param delivery Delivery interface to use for posting responses
+     * @param cache        Cache interface to use for resolution
+     * @param delivery     Delivery interface to use for posting responses
      */
     public CacheDispatcher(
             BlockingQueue<Request<?>> cacheQueue, BlockingQueue<Request<?>> networkQueue,
@@ -80,32 +90,33 @@ public class CacheDispatcher extends Thread {
         if (DEBUG) VolleyLog.v("start new dispatcher");
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
-        // Make a blocking call to initialize the cache.
+        // 1. 初始化缓存
         mCache.initialize();
 
+        // 死循环
         while (true) {
             try {
-                // Get a request from the cache triage queue, blocking until
-                // at least one is available.
+                // 2. 从缓存阻塞队列中取request，如果没有的话，会一直阻塞，知道能take到一条请求
                 final Request<?> request = mCacheQueue.take();
                 request.addMarker("cache-queue-take");
 
-                // If the request has been canceled, don't bother dispatching it.
+                // 3. 如果request被取消了，则不去分发它
                 if (request.isCanceled()) {
                     request.finish("cache-discard-canceled");
                     continue;
                 }
 
-                // Attempt to retrieve this item from cache.
+                // 4. 尝试从缓存中获取
                 Cache.Entry entry = mCache.get(request.getCacheKey());
                 if (entry == null) {
                     request.addMarker("cache-miss");
-                    // Cache miss; send off to the network dispatcher.
+
+                    // 5. 缓存没有命中，则将请求放入网路请求队列中
                     mNetworkQueue.put(request);
                     continue;
                 }
 
-                // If it is completely expired, just send it to the network.
+                // 5. 如果缓存到期，则添加到网路请求队列中
                 if (entry.isExpired()) {
                     request.addMarker("cache-hit-expired");
                     request.setCacheEntry(entry);
@@ -113,19 +124,18 @@ public class CacheDispatcher extends Thread {
                     continue;
                 }
 
-                // We have a cache hit; parse its data for delivery back to the request.
+                // 6. 此时有缓存命中，将data数据交付给request
                 request.addMarker("cache-hit");
                 Response<?> response = request.parseNetworkResponse(
                         new NetworkResponse(entry.data, entry.responseHeaders));
                 request.addMarker("cache-hit-parsed");
 
+                // 7. 判断是否需要刷新数据
                 if (!entry.refreshNeeded()) {
-                    // Completely unexpired cache hit. Just deliver the response.
+                    // 完全命中cache，直接将结果交付request
                     mDelivery.postResponse(request, response);
                 } else {
-                    // Soft-expired cache hit. We can deliver the cached response,
-                    // but we need to also send the request to the network for
-                    // refreshing.
+                    // Soft-expired 缓存命中，此时可以交付。但是同时需要再次请求以便刷新数据
                     request.addMarker("cache-hit-refresh-needed");
                     request.setCacheEntry(entry);
 
