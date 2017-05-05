@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo;
+package com.jacksen.volley.demo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.jacksen.demo.R;
 
 public class SecondActivity extends AppCompatActivity {
 

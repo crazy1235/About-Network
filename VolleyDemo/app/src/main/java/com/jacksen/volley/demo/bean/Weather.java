@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo.bean;
+package com.jacksen.volley.demo.bean;
 
 import java.util.List;
 

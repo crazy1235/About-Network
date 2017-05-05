@@ -1,7 +1,9 @@
-package com.jacksen.volleydemo;
+package com.jacksen.volley.demo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.jacksen.demo.R;
 
 /**
  * home activity

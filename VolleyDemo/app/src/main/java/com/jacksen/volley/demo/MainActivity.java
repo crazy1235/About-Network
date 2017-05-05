@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo;
+package com.jacksen.volley.demo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.jacksen.demo.R;
 
 import org.json.JSONObject;
 

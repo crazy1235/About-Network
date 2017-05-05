@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo;
+package com.jacksen.volley.demo;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
