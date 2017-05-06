@@ -96,11 +96,11 @@ public class CacheDispatcher extends Thread {
         // 死循环
         while (true) {
             try {
-                // 2. 从缓存阻塞队列中取request，如果没有的话，会一直阻塞，知道能take到一条请求
+                // 2. 从缓存阻塞队列中取request，如果没有的话，会一直阻塞，直到能take到一条请求
                 final Request<?> request = mCacheQueue.take();
                 request.addMarker("cache-queue-take");
 
-                // 3. 如果request被取消了，则不去分发它
+                // 3. 如果request被取消了，则不在处理
                 if (request.isCanceled()) {
                     request.finish("cache-discard-canceled");
                     continue;
