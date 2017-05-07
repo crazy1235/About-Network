@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo;
+package com.jacksen.volley.demo;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.jacksen.demo.R;
 
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
 

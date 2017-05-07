@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jacksen.volleydemo.SecondActivity">
+    tools:context="com.jacksen.demo.SecondActivity">
 
     <Button
         android:id="@+id/image_request_btn"

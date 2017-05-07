@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,21 +61,46 @@ public class Utils {
         return checkFileIsExist(new File(filePath));
     }
 
+    /**
+     * InputStream to StringBuilder
+     *
+     * @param inputStream
+     * @return
+     */
+    public static StringBuilder convertStreamToStringBuilder(InputStream inputStream) {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        try {
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder;
+    }
 
     /**
-     * @param is
+     * InputStream to String
+     *
+     * @param inputStream
      * @return
-     * @throws IOException
      */
-    public static String convertStreamToString(InputStream is) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
+    public static String convertStreamToString(InputStream inputStream) {
+        String line = "";
+        String result = "";
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        try {
+            while ((line = bufferedReader.readLine()) != null) {
+                result += line;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return sb.toString();
+        return result;
     }
+
 
     /**
      * @param outputStream

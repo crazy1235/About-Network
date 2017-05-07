@@ -1,4 +1,4 @@
-package com.jacksen.volleydemo;
+package com.jacksen.demo;
 
 import org.junit.Test;
 
