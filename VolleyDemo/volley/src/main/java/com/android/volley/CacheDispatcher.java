@@ -132,7 +132,7 @@ public class CacheDispatcher extends Thread {
 
                 // 7. 判断是否需要刷新数据
                 if (!entry.refreshNeeded()) {
-                    // 完全命中cache，直接将结果交付request
+                    // 8. 完全命中cache，直接将结果交付ResponseDelivery处理
                     mDelivery.postResponse(request, response);
                 } else {
                     // Soft-expired 缓存命中，此时可以交付。但是同时需要再次请求以便刷新数据
@@ -142,8 +142,7 @@ public class CacheDispatcher extends Thread {
                     // Mark the response as intermediate.
                     response.intermediate = true;
 
-                    // Post the intermediate response back to the user and have
-                    // the delivery then forward the request along to the network.
+                    // 9. 将缓存结果显示，并在此请求以便刷新数据
                     mDelivery.postResponse(request, response, new Runnable() {
                         @Override
                         public void run() {

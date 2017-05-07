@@ -253,6 +253,7 @@ public class RequestQueue {
         // Insert request into stage if there's already a request with the same cache key in flight.
         synchronized (mWaitingRequests) {
             String cacheKey = request.getCacheKey();
+            // 3. 判断是否有相同的请求正在处理
             if (mWaitingRequests.containsKey(cacheKey)) {
                 // There is already a request in flight. Queue up.
                 Queue<Request<?>> stagedRequests = mWaitingRequests.get(cacheKey);
