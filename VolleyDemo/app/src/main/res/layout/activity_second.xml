@@ -8,8 +8,32 @@
     android:orientation="vertical"
     tools:context="com.jacksen.demo.SecondActivity">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <Button
+        android:id="@+id/image_request_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_request" />
+
+    <Button
+        android:id="@+id/image_loader_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_loader" />
+
+    <Button
+        android:id="@+id/network_iv_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/network_image_view" />
+
+
+    <ImageView
         android:id="@+id/image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/network_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
