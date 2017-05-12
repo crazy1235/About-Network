@@ -234,8 +234,8 @@ public class RequestQueue {
      * @return The passed-in request
      */
     public <T> Request<T> add(Request<T> request) {
-        // Tag the request as belonging to this queue and add it to the set of current requests.
         request.setRequestQueue(this);
+        // 添加到正在请求的集合中
         synchronized (mCurrentRequests) {
             mCurrentRequests.add(request);
         }
@@ -250,11 +250,11 @@ public class RequestQueue {
             return request;
         }
 
-        // Insert request into stage if there's already a request with the same cache key in flight.
+        // 3. 判断等待请求队列中是否由相同key的请求
         synchronized (mWaitingRequests) {
             String cacheKey = request.getCacheKey();
+            // 4. 如果有，则添加到等待请求队列中
             if (mWaitingRequests.containsKey(cacheKey)) {
-                // There is already a request in flight. Queue up.
                 Queue<Request<?>> stagedRequests = mWaitingRequests.get(cacheKey);
                 if (stagedRequests == null) {
                     stagedRequests = new LinkedList<Request<?>>();
@@ -264,9 +264,7 @@ public class RequestQueue {
                 if (VolleyLog.DEBUG) {
                     VolleyLog.v("Request for cacheKey=%s is in flight, putting on hold.", cacheKey);
                 }
-            } else {
-                // Insert 'null' queue for this cacheKey, indicating there is now a request in
-                // flight.
+            } else { // 5. 如果没有则也添加到等待请求队列中，并将请求添加到缓存队列中
                 mWaitingRequests.put(cacheKey, null);
                 mCacheQueue.add(request);
             }

@@ -93,7 +93,7 @@ public class CacheDispatcher extends Thread {
         // 1. 初始化缓存
         mCache.initialize();
 
-        // 死循环
+        // 循环
         while (true) {
             try {
                 // 2. 从缓存阻塞队列中取request，如果没有的话，会一直阻塞，直到能take到一条请求
@@ -116,7 +116,7 @@ public class CacheDispatcher extends Thread {
                     continue;
                 }
 
-                // 5. 如果缓存到期，则添加到网路请求队列中
+                // 6. 如果缓存到期，则添加到网路请求队列中
                 if (entry.isExpired()) {
                     request.addMarker("cache-hit-expired");
                     request.setCacheEntry(entry);
@@ -124,13 +124,13 @@ public class CacheDispatcher extends Thread {
                     continue;
                 }
 
-                // 6. 此时有缓存命中，将data数据交付给request
+                // 7. 此时有缓存命中，将data数据交付给request
                 request.addMarker("cache-hit");
                 Response<?> response = request.parseNetworkResponse(
                         new NetworkResponse(entry.data, entry.responseHeaders));
                 request.addMarker("cache-hit-parsed");
 
-                // 7. 判断是否需要刷新数据
+                // 8. 判断是否需要刷新数据
                 if (!entry.refreshNeeded()) {
                     // 完全命中cache，直接将结果交付request
                     mDelivery.postResponse(request, response);
@@ -142,8 +142,7 @@ public class CacheDispatcher extends Thread {
                     // Mark the response as intermediate.
                     response.intermediate = true;
 
-                    // Post the intermediate response back to the user and have
-                    // the delivery then forward the request along to the network.
+                    // 9. 投递缓存的结果，并将请求添加到mNetworkQueue中以便刷新数据
                     mDelivery.postResponse(request, response, new Runnable() {
                         @Override
                         public void run() {

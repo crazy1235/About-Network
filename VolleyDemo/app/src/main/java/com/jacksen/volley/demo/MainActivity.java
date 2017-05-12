@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("MainActivity", "error");
                     }
                 });
+        stringRequest.setTag(Constants.URL_WEATHER_INFO);
         requestQueue.add(stringRequest);
     }
 
@@ -73,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        requestQueue.cancelAll(Constants.URL_WEATHER_INFO);
     }
 }
 
