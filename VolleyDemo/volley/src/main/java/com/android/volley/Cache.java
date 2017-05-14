@@ -24,24 +24,17 @@ import java.util.Map;
  */
 public interface Cache {
     /**
-     * Retrieves an entry from the cache.
-     *
-     * @param key Cache key
-     * @return An {@link Entry} or null in the event of a cache miss
+     * 通过key得到缓存的实体对象
      */
     public Entry get(String key);
 
     /**
-     * Adds or replaces an entry to the cache.
-     *
-     * @param key   Cache key
-     * @param entry Data to store and metadata for cache coherency, TTL, etc.
+     * 保存一个请求的实体对象
      */
     public void put(String key, Entry entry);
 
     /**
-     * Performs any potentially long-running actions needed to initialize the cache;
-     * will be called from a worker thread.
+     * 初始化
      */
     public void initialize();
 
@@ -54,14 +47,12 @@ public interface Cache {
     public void invalidate(String key, boolean fullExpire);
 
     /**
-     * Removes an entry from the cache.
-     *
-     * @param key Cache key
+     * 根据key移除一个缓存实体
      */
     public void remove(String key);
 
     /**
-     * Empties the cache.
+     * 清除缓存
      */
     public void clear();
 
@@ -110,6 +101,7 @@ public interface Cache {
         /**
          * True if a refresh is needed from the original data source.
          */
+        // 判断是否需要刷新数据
         public boolean refreshNeeded() {
             return this.softTtl < System.currentTimeMillis();
         }

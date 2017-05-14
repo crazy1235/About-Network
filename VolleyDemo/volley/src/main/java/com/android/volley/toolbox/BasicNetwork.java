@@ -72,7 +72,7 @@ public class BasicNetwork implements Network {
 
     /**
      * @param httpStack HTTP stack to be used
-     * @param pool a buffer pool that improves GC performance in copy operations
+     * @param pool      a buffer pool that improves GC performance in copy operations
      */
     public BasicNetwork(HttpStack httpStack, ByteArrayPool pool) {
         mHttpStack = httpStack;
@@ -87,42 +87,44 @@ public class BasicNetwork implements Network {
             byte[] responseContents = null;
             Map<String, String> responseHeaders = new HashMap<String, String>();
             try {
-                // Gather headers.
+                // 1. 添加缓存信息(如果有)的一些头信息
                 Map<String, String> headers = new HashMap<String, String>();
                 addCacheHeaders(headers, request.getCacheEntry());
+                // 2. 网络请求结果封装成 HttpResponse 对象
                 httpResponse = mHttpStack.performRequest(request, headers);
+                // 3.判断返回码
                 StatusLine statusLine = httpResponse.getStatusLine();
                 int statusCode = statusLine.getStatusCode();
 
                 responseHeaders = convertHeaders(httpResponse.getAllHeaders());
-                // Handle cache validation.
+                // 4. 没有修改，直接将缓存中的data取出做为相应结果
                 if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
                     return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED,
                             request.getCacheEntry() == null ? null : request.getCacheEntry().data,
                             responseHeaders, true);
                 }
 
-                // Some responses such as 204s do not have content.  We must check.
+                // 5. 检测是否有相应内容 (比如204状态码没有content)
                 if (httpResponse.getEntity() != null) {
-                  responseContents = entityToBytes(httpResponse.getEntity());
+                    responseContents = entityToBytes(httpResponse.getEntity());
                 } else {
-                  // Add 0 byte response as a way of honestly representing a
-                  // no-content request.
-                  responseContents = new byte[0];
+                    responseContents = new byte[0];
                 }
 
-                // if the request is slow, log it.
+                // 6. 打印相应比较慢的请求
                 long requestLifetime = SystemClock.elapsedRealtime() - requestStart;
                 logSlowRequests(requestLifetime, request, responseContents, statusLine);
 
+                // 7. 状态码不在 200 - 299 之间的抛异常
                 if (statusCode < 200 || statusCode > 299) {
                     throw new IOException();
                 }
+                // 8. 返回 NetworkResponse 对象
                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
             } catch (SocketTimeoutException e) {
-                attemptRetryOnException("socket", request, new TimeoutError());
+                attemptRetryOnException("socket", request, new TimeoutError()); // 9.尝试重试
             } catch (ConnectTimeoutException e) {
-                attemptRetryOnException("connection", request, new TimeoutError());
+                attemptRetryOnException("connection", request, new TimeoutError()); // 9.尝试重试
             } catch (MalformedURLException e) {
                 throw new RuntimeException("Bad URL " + request.getUrl(), e);
             } catch (IOException e) {
@@ -140,7 +142,7 @@ public class BasicNetwork implements Network {
                     if (statusCode == HttpStatus.SC_UNAUTHORIZED ||
                             statusCode == HttpStatus.SC_FORBIDDEN) {
                         attemptRetryOnException("auth",
-                                request, new AuthFailureError(networkResponse));
+                                request, new AuthFailureError(networkResponse)); // 9.尝试重试
                     } else {
                         // TODO: Only throw ServerError for 5xx status codes.
                         throw new ServerError(networkResponse);
@@ -156,10 +158,10 @@ public class BasicNetwork implements Network {
      * Logs requests that took over SLOW_REQUEST_THRESHOLD_MS to complete.
      */
     private void logSlowRequests(long requestLifetime, Request<?> request,
-            byte[] responseContents, StatusLine statusLine) {
+                                 byte[] responseContents, StatusLine statusLine) {
         if (DEBUG || requestLifetime > SLOW_REQUEST_THRESHOLD_MS) {
             VolleyLog.d("HTTP response for request=<%s> [lifetime=%d], [size=%s], " +
-                    "[rc=%d], [retryCount=%s]", request, requestLifetime,
+                            "[rc=%d], [retryCount=%s]", request, requestLifetime,
                     responseContents != null ? responseContents.length : "null",
                     statusLine.getStatusCode(), request.getRetryPolicy().getCurrentRetryCount());
         }
@@ -168,10 +170,11 @@ public class BasicNetwork implements Network {
     /**
      * Attempts to prepare the request for a retry. If there are no more attempts remaining in the
      * request's retry policy, a timeout exception is thrown.
+     *
      * @param request The request to use.
      */
     private static void attemptRetryOnException(String logPrefix, Request<?> request,
-            VolleyError exception) throws VolleyError {
+                                                VolleyError exception) throws VolleyError {
         RetryPolicy retryPolicy = request.getRetryPolicy();
         int oldTimeout = request.getTimeoutMs();
 
@@ -206,7 +209,9 @@ public class BasicNetwork implements Network {
         VolleyLog.v("HTTP ERROR(%s) %d ms to fetch %s", what, (now - start), url);
     }
 
-    /** Reads the contents of HttpEntity into a byte[]. */
+    /**
+     * Reads the contents of HttpEntity into a byte[].
+     */
     private byte[] entityToBytes(HttpEntity entity) throws IOException, ServerError {
         PoolingByteArrayOutputStream bytes =
                 new PoolingByteArrayOutputStream(mPool, (int) entity.getContentLength());
